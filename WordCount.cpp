@@ -132,7 +132,7 @@ void WordCount::dumpWordsSortedByWord(std::ostream& out) const {
 
     std::sort(sortedWords.begin(), sortedWords.end(),
         [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
-            return a.first < b.first; 
+            return a.first > b.first; 
         });
 
     for (const auto& wordCount : sortedWords) {
