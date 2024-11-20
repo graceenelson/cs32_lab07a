@@ -123,19 +123,17 @@ std::string WordCount::makeValidWord(std::string word) {
 
 void WordCount::dumpWordsSortedByWord(std::ostream& out) const {
     std::vector<std::pair<std::string, int>> sorted;
+    
     for (size_t i = 0; i < CAPACITY; i++) {
         for (const auto& pair : table[i]) {
             sorted.emplace_back(pair.first, pair.second);
         }
     }
 
-    for (size_t i = 0; i < sorted.size(); ++i) {
-        for (size_t j = 0; j < sorted.size() - 1 - i; ++j) {
-            if (sorted[j].first > sorted[j + 1].first) {
-                std::swap(sorted[j], sorted[j + 1]);
-            }
-        }
-    }
+    std::sort(sorted.begin(), sorted.end(),
+        [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+            return a.first > b.first; 
+        });
 
     for (const auto& wordCount : sorted) {
         out << wordCount.first << "," << wordCount.second << "\n";
@@ -144,22 +142,21 @@ void WordCount::dumpWordsSortedByWord(std::ostream& out) const {
 
 void WordCount::dumpWordsSortedByOccurence(std::ostream& out) const {
     std::vector<std::pair<std::string, int>> sorted;
-
+    
     for (size_t i = 0; i < CAPACITY; i++) {
         for (const auto& pair : table[i]) {
             sorted.emplace_back(pair.first, pair.second);
         }
     }
 
-    for (size_t i = 0; i < sorted.size(); ++i) {
-        for (size_t j = 0; j < sorted.size() - 1 - i; ++j) {
-            const auto& a = sorted[j];
-            const auto& b = sorted[j + 1];
-            if (a.second > b.second || (a.second == b.second && a.first > b.first)) {
-                std::swap(sorted[j], sorted[j + 1]);
+    std::sort(sorted.begin(), sorted.end(),
+        [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
+            if (a.second == b.second) {
+                return a.first < b.first;
             }
-        }
-    }
+            return a.second < b.second; 
+        });
+
 
     for (const auto& wordCount : sorted) {
         out << wordCount.first << "," << wordCount.second << "\n";
